@@ -38,7 +38,7 @@ export interface AuthContextType {
     loading: boolean;
     error: string | null;
     login: (email: string, password: string) => Promise<void>;
-    register: (email: string, password: string, role: Role) => Promise<AuthResponse>;
+    register: (email: string, password: string, role: Role, metadata?: Record<string, any>, isPartnerPage?: boolean) => Promise<AuthResponse>;
     logout: () => void;
     clearError: () => void;
 }
