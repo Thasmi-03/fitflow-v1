@@ -46,7 +46,7 @@ export function StylerRegisterForm({ onSuccess, onSwitchToLogin }: StylerRegiste
   return (
     <div>
       <h2 className="text-2xl font-bold mb-2">Create Account</h2>
-      <p className="text-gray-600 text-sm mb-6">Sign up as a customer</p>
+      <p className="text-gray-600 text-sm mb-6">Sign up as a styler</p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
