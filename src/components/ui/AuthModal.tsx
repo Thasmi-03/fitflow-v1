@@ -1,16 +1,14 @@
-// src/components/ui/AuthModal.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LoginForm } from '@/components/auth/LoginForm';
-import { RegisterForm } from '@/components/auth/RegisterForm'; // partner form (if needed)
 import { StylerRegisterForm } from '@/components/auth/StylerRegisterForm';
 
 interface AuthModalProps {
   open: boolean;
   initialTab?: 'login' | 'signup';
   onClose: () => void;
-  isPartnerPage?: boolean; // if true show partner register, else show styler register
+  isPartnerPage?: boolean;
 }
 
 export default function AuthModal({
@@ -19,49 +17,45 @@ export default function AuthModal({
   onClose,
   isPartnerPage = false,
 }: AuthModalProps) {
-  const [tab, setTab] = useState<'login' | 'signup'>(initialTab);
+  const [currentView, setCurrentView] = useState<'login' | 'signup'>(initialTab);
 
+  // Reset to initialTab when modal opens
   useEffect(() => {
-    if (open) setTab(initialTab);
+    if (open) {
+      setCurrentView(initialTab);
+    }
   }, [open, initialTab]);
 
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
+      {/* Backdrop */}
       <div className="fixed inset-0 bg-black/50" onClick={onClose} />
 
-      <div className="bg-white p-6 rounded shadow-lg z-60 w-full max-w-md relative">
-        {/* Tabs */}
-        <div className="flex gap-2 mb-4">
-          <button
-            className={`flex-1 py-2 rounded ${tab === 'login' ? 'bg-gray-800 text-white' : 'bg-gray-100'}`}
-            onClick={() => setTab('login')}
-          >
-            Login
-          </button>
-          <button
-            className={`flex-1 py-2 rounded ${tab === 'signup' ? 'bg-gray-800 text-white' : 'bg-gray-100'}`}
-            onClick={() => setTab('signup')}
-          >
-            Signup
-          </button>
-        </div>
+      {/* Modal */}
+      <div className="bg-white p-8 rounded-lg shadow-lg z-60 w-full max-w-md relative">
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl"
+          aria-label="Close"
+        >
+          ✕
+        </button>
 
-        {/* Forms */}
-        {tab === 'login' ? (
-          <LoginForm onSuccess={onClose} />
-        ) : isPartnerPage ? (
-          <RegisterForm onSuccess={onClose} isPartnerPage />
+        {/* Content */}
+        {currentView === 'login' ? (
+          <LoginForm
+            onSuccess={onClose}
+            onSwitchToSignup={() => setCurrentView('signup')}
+          />
         ) : (
-          <StylerRegisterForm onSuccess={onClose} />
+          <StylerRegisterForm
+            onSuccess={onClose}
+            onSwitchToLogin={() => setCurrentView('login')}
+          />
         )}
-
-        <div className="mt-4 text-right">
-          <button onClick={onClose} className="text-sm underline">
-            Close
-          </button>
-        </div>
       </div>
     </div>
   );

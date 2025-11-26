@@ -14,9 +14,10 @@ interface LoginFormValues {
 
 interface LoginFormProps {
   onSuccess?: () => void;
+  onSwitchToSignup?: () => void;
 }
 
-export function LoginForm({ onSuccess }: LoginFormProps = {}) {
+export function LoginForm({ onSuccess, onSwitchToSignup }: LoginFormProps) {
   const { login, loading } = useAuth();
   const { register, handleSubmit } = useForm<LoginFormValues>();
   const [error, setError] = useState('');
@@ -32,20 +33,53 @@ export function LoginForm({ onSuccess }: LoginFormProps = {}) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div>
-        <Label htmlFor="email">Email</Label>
-        <Input {...register('email')} id="email" type="email" disabled={loading} />
-      </div>
+    <div>
+      <h2 className="text-2xl font-bold mb-2">Login</h2>
+      <p className="text-gray-600 text-sm mb-6">Enter your credentials to access your account</p>
 
-      <div>
-        <Label htmlFor="password">Password</Label>
-        <Input {...register('password')} id="password" type="password" disabled={loading} />
-      </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div>
+          <Label htmlFor="email">Email</Label>
+          <Input
+            {...register('email')}
+            id="email"
+            type="email"
+            placeholder="you@example.com"
+            disabled={loading}
+            className="mt-1"
+          />
+        </div>
 
-      {error && <p className="text-red-500 text-sm">{error}</p>}
+        <div>
+          <Label htmlFor="password">Password</Label>
+          <Input
+            {...register('password')}
+            id="password"
+            type="password"
+            disabled={loading}
+            className="mt-1"
+          />
+        </div>
 
-      <Button type="submit" disabled={loading}>{loading ? 'Logging in...' : 'Login'}</Button>
-    </form>
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
+        <Button type="submit" disabled={loading} className="w-full">
+          {loading ? 'Logging in...' : 'Login'}
+        </Button>
+      </form>
+
+      {onSwitchToSignup && (
+        <p className="text-center text-sm text-gray-600 mt-4">
+          Don't have an account?{' '}
+          <button
+            type="button"
+            onClick={onSwitchToSignup}
+            className="text-blue-600 hover:underline font-medium"
+          >
+            Sign up
+          </button>
+        </p>
+      )}
+    </div>
   );
 }

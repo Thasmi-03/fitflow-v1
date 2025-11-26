@@ -23,6 +23,7 @@ export interface RegisterRequest {
     email: string;
     password: string;
     role: Role;
+    shopName?: string; // Optional, for partner registrations
 }
 
 // Login request payload

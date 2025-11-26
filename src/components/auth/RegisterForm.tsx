@@ -10,18 +10,12 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 
-const registerSchema = z
-  .object({
-    shopName: z.string().min(1, 'Shop name is required'),
-    email: z.string().email('Invalid email'),
-    password: z.string().min(6, 'Password must be at least 6 chars'),
-    confirmPassword: z.string().min(6),
-    role: z.enum(['admin', 'styler', 'partner']),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ['confirmPassword'],
-    message: "Passwords don't match",
-  });
+const registerSchema = z.object({
+  shopName: z.string().min(1, 'Shop name is required'),
+  email: z.string().email('Invalid email'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+  role: z.enum(['admin', 'styler', 'partner']),
+});
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
@@ -33,6 +27,7 @@ interface RegisterFormProps {
 export function RegisterForm({ isPartnerPage = false, onSuccess }: RegisterFormProps = {}) {
   const { register: registerUser, loading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
 
   const {
     register,
@@ -49,11 +44,13 @@ export function RegisterForm({ isPartnerPage = false, onSuccess }: RegisterFormP
   }, [setValue, isPartnerPage]);
 
   const onSubmit = async (data: RegisterFormValues) => {
+    setError('');
     try {
       await registerUser(data.email, data.password, data.role as Role, { shopName: data.shopName }, isPartnerPage);
       if (onSuccess) onSuccess();
-    } catch (err) {
+    } catch (err: any) {
       console.error('Registration error:', err);
+      setError(err.message || 'Registration failed');
     }
   };
 
@@ -77,11 +74,17 @@ export function RegisterForm({ isPartnerPage = false, onSuccess }: RegisterFormP
         {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
       </div>
 
-     
+      {error && (
+        <div className="p-3 rounded-md bg-red-50 border border-red-200">
+          <p className="text-red-600 text-sm">{error}</p>
+        </div>
+      )}
 
       <input {...register('role')} type="hidden" value="partner" />
 
-      <Button type="submit" disabled={loading}>{loading ? 'Registering...' : 'Register as Partner'}</Button>
+      <Button type="submit" disabled={loading} className="w-full">
+        {loading ? 'Registering...' : 'Register as Partner'}
+      </Button>
     </form>
   );
 }

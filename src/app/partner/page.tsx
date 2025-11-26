@@ -7,8 +7,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Shirt, Package, DollarSign } from 'lucide-react';
 
 export default function PartnerDashboard() {
-    const { user } = useAuth();
-
     return (
         <ProtectedRoute allowedRoles={['partner']}>
             <div className="min-h-screen bg-gray-50">
@@ -18,7 +16,7 @@ export default function PartnerDashboard() {
                     <div className="mb-8">
                         <h1 className="text-3xl font-bold text-gray-900">Partner Dashboard</h1>
                         <p className="mt-2 text-gray-600">
-                            Welcome back, {user?.email}
+                            Manage your clothing inventory and track earnings
                         </p>
                     </div>
 

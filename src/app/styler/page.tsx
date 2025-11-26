@@ -1,14 +1,12 @@
 'use client'
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { Navbar } from '@/components/Navbar';
+import { Navbar } from '@/components/layout/Navbar';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Palette, Calendar, TrendingUp } from 'lucide-react';
 
 export default function StylerDashboard() {
-    const { user } = useAuth();
-
     return (
         <ProtectedRoute allowedRoles={['styler']}>
             <div className="min-h-screen bg-gray-50">
@@ -18,7 +16,7 @@ export default function StylerDashboard() {
                     <div className="mb-8">
                         <h1 className="text-3xl font-bold text-gray-900">Styler Dashboard</h1>
                         <p className="mt-2 text-gray-600">
-                            Welcome back, {user?.email}
+                            Create occasions and manage your styling portfolio
                         </p>
                     </div>
 

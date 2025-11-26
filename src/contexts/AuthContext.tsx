@@ -1,8 +1,9 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import axios from 'axios';
 import { Role } from '@/types/auth';
+import * as authApi from '@/lib/api/auth';
+import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   loading: boolean;
@@ -12,20 +13,41 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({
   loading: false,
-  login: async () => {},
-  register: async () => {},
+  login: async () => { },
+  register: async () => { },
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const res = await axios.post('/api/auth/login', { email, password });
-      console.log('Logged in', res.data);
-    } catch (err) {
-      throw new Error('Invalid credentials');
+      const response = await authApi.login({ email, password });
+      console.log('Logged in successfully:', response);
+
+      // TODO: Store token and user data
+      // For now, just redirect based on role
+      if (response.user) {
+        const dashboardMap: Record<Role, string> = {
+          admin: '/admin',
+          styler: '/styler',
+          partner: '/partner',
+        };
+        router.push(dashboardMap[response.user.role]);
+      }
+    } catch (err: any) {
+      console.error('Login error:', err);
+      console.error('Login error response:', err?.response?.data);
+
+      // Handle specific error cases
+      if (err?.response?.status === 403) {
+        throw new Error('Your account is pending admin approval. Please wait for approval before logging in.');
+      }
+
+      const errorMessage = err?.response?.data?.message || err?.response?.data?.error || 'Invalid credentials';
+      throw new Error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -40,10 +62,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   ) => {
     setLoading(true);
     try {
-      const res = await axios.post('/api/auth/register', { email, password, role, ...extra });
-      console.log('Registered', res.data);
-    } catch (err) {
-      throw new Error('Registration failed');
+      const response = await authApi.register({
+        email,
+        password,
+        role,
+        ...extra
+      });
+      console.log('Registered successfully:', response);
+
+      // Redirect to pending page or login based on response
+      if (isPartner) {
+        router.push('/auth/pending');
+      } else {
+        router.push('/auth/login');
+      }
+    } catch (err: any) {
+      console.error('Registration error:', err);
+      console.error('Error response:', err?.response?.data);
+      const errorMessage = err?.response?.data?.message || err?.response?.data?.error || 'Registration failed';
+      throw new Error(errorMessage);
     } finally {
       setLoading(false);
     }

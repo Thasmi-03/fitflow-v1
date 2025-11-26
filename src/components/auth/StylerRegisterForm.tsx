@@ -1,4 +1,3 @@
-// src/components/auth/StylerRegisterForm.tsx
 'use client';
 
 import React, { useState } from 'react';
@@ -17,9 +16,10 @@ interface StylerRegisterFormValues {
 
 interface StylerRegisterFormProps {
   onSuccess?: () => void;
+  onSwitchToLogin?: () => void;
 }
 
-export function StylerRegisterForm({ onSuccess }: StylerRegisterFormProps = {}) {
+export function StylerRegisterForm({ onSuccess, onSwitchToLogin }: StylerRegisterFormProps) {
   const { register, handleSubmit } = useForm<StylerRegisterFormValues>();
   const [loading, setLoading] = useState(false);
 
@@ -38,35 +38,83 @@ export function StylerRegisterForm({ onSuccess }: StylerRegisterFormProps = {}) 
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div>
-        <Label htmlFor="fullName">Full Name</Label>
-        <Input {...register('fullName')} id="fullName" required />
-      </div>
+    <div>
+      <h2 className="text-2xl font-bold mb-2">Create Account</h2>
+      <p className="text-gray-600 text-sm mb-6">Sign up as a customer</p>
 
-      <div>
-        <Label htmlFor="email">Email</Label>
-        <Input {...register('email')} id="email" type="email" required />
-      </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div>
+          <Label htmlFor="fullName">Full Name</Label>
+          <Input
+            {...register('fullName')}
+            id="fullName"
+            required
+            className="mt-1"
+          />
+        </div>
 
-      <div>
-        <Label htmlFor="phone">Phone</Label>
-        <Input {...register('phone')} id="phone" required />
-      </div>
+        <div>
+          <Label htmlFor="email">Email</Label>
+          <Input
+            {...register('email')}
+            id="email"
+            type="email"
+            placeholder="you@example.com"
+            required
+            className="mt-1"
+          />
+        </div>
 
-      <div>
-        <Label htmlFor="address">Address</Label>
-        <Input {...register('address')} id="address" required />
-      </div>
+        <div>
+          <Label htmlFor="phone">Phone</Label>
+          <Input
+            {...register('phone')}
+            id="phone"
+            placeholder="+1234567890"
+            required
+            className="mt-1"
+          />
+        </div>
 
-      <div>
-        <Label htmlFor="password">Password</Label>
-        <Input {...register('password')} id="password" type="password" required />
-      </div>
+        <div>
+          <Label htmlFor="address">Address</Label>
+          <Input
+            {...register('address')}
+            id="address"
+            placeholder="123 Main St, City, Country"
+            required
+            className="mt-1"
+          />
+        </div>
 
-      <Button type="submit" disabled={loading}>
-        {loading ? 'Signing up...' : 'Sign Up'}
-      </Button>
-    </form>
+        <div>
+          <Label htmlFor="password">Password</Label>
+          <Input
+            {...register('password')}
+            id="password"
+            type="password"
+            required
+            className="mt-1"
+          />
+        </div>
+
+        <Button type="submit" disabled={loading} className="w-full">
+          {loading ? 'Signing up...' : 'Sign Up'}
+        </Button>
+      </form>
+
+      {onSwitchToLogin && (
+        <p className="text-center text-sm text-gray-600 mt-4">
+          Already have an account?{' '}
+          <button
+            type="button"
+            onClick={onSwitchToLogin}
+            className="text-blue-600 hover:underline font-medium"
+          >
+            Login
+          </button>
+        </p>
+      )}
+    </div>
   );
 }

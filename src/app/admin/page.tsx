@@ -12,7 +12,6 @@ import { toast } from 'sonner';
 import { Users, CheckCircle } from 'lucide-react';
 
 export default function AdminDashboard() {
-    const { user } = useAuth();
     const [pendingUsers, setPendingUsers] = useState<PendingUser[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -53,7 +52,7 @@ export default function AdminDashboard() {
                     <div className="mb-8">
                         <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
                         <p className="mt-2 text-gray-600">
-                            Welcome back, {user?.email}
+                            Manage user approvals and system settings
                         </p>
                     </div>
 

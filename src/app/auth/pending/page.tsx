@@ -13,8 +13,6 @@ import {
 import { Clock } from 'lucide-react';
 
 export default function PendingPage() {
-    const { user, logout } = useAuth();
-
     return (
         <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
             <Card className="w-full max-w-md">
@@ -29,16 +27,6 @@ export default function PendingPage() {
                 </CardHeader>
 
                 <CardContent className="space-y-4">
-                    <div className="rounded-lg bg-gray-50 p-4">
-                        <p className="text-sm text-gray-600">
-                            <strong>Email:</strong> {user?.email}
-                        </p>
-                        <p className="text-sm text-gray-600 mt-2">
-                            <strong>Role:</strong>{' '}
-                            <span className="capitalize">{user?.role}</span>
-                        </p>
-                    </div>
-
                     <p className="text-sm text-gray-600">
                         Your registration has been received. An administrator will review and
                         approve your account shortly. You'll be able to log in once your
@@ -47,7 +35,7 @@ export default function PendingPage() {
                 </CardContent>
 
                 <CardFooter>
-                    <Button onClick={logout} variant="outline" className="w-full">
+                    <Button onClick={() => window.location.href = '/'} variant="outline" className="w-full">
                         Back to Home
                     </Button>
                 </CardFooter>
