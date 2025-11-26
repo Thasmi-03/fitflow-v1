@@ -1,7 +1,6 @@
 const TOKEN_KEY = 'fitflow_token';
 const USER_KEY = 'fitflow_user';
 
-// Token management
 export const setToken = (token: string): void => {
     if (typeof window !== 'undefined') {
         localStorage.setItem(TOKEN_KEY, token);
@@ -21,7 +20,6 @@ export const removeToken = (): void => {
     }
 };
 
-// User management
 export const setUser = (user: any): void => {
     if (typeof window !== 'undefined') {
         localStorage.setItem(USER_KEY, JSON.stringify(user));
@@ -42,7 +40,6 @@ export const removeUser = (): void => {
     }
 };
 
-// Clear all auth data
 export const clearAuthData = (): void => {
     removeToken();
     removeUser();

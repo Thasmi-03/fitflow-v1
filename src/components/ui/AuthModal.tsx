@@ -19,7 +19,6 @@ export default function AuthModal({
 }: AuthModalProps) {
   const [currentView, setCurrentView] = useState<'login' | 'signup'>(initialTab);
 
-  // Reset to initialTab when modal opens
   useEffect(() => {
     if (open) {
       setCurrentView(initialTab);
@@ -30,12 +29,9 @@ export default function AuthModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
       <div className="fixed inset-0 bg-black/50" onClick={onClose} />
 
-      {/* Modal */}
       <div className="bg-white p-8 rounded-lg shadow-lg z-60 w-full max-w-md relative">
-        {/* Close button */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl"
@@ -44,7 +40,6 @@ export default function AuthModal({
           ✕
         </button>
 
-        {/* Content */}
         {currentView === 'login' ? (
           <LoginForm
             onSuccess={onClose}

@@ -24,7 +24,6 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         <Link href="/" className="text-2xl font-bold">FitFlow</Link>
 
-        {/* Desktop Menu */}
         <div className="hidden md:flex space-x-4 items-center">
           <Link href="/auth/register">
             <Button variant="outline">Become a Partner</Button>
@@ -35,12 +34,11 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Auth Modal */}
       <AuthModal
         open={isAuthOpen}
         initialTab={authTab}
         onClose={() => setIsAuthOpen(false)}
-        isPartnerPage={false} // ensures styler signup form opens, not partner
+        isPartnerPage={false} 
       />
     </nav>
   );

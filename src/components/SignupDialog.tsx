@@ -1,4 +1,3 @@
-// src/components/ui/SignupDialog.tsx
 'use client';
 
 import React from 'react';

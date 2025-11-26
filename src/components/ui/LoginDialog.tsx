@@ -12,19 +12,16 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
     if (!open) return null;
 
     return (
-        // Overlay
         <div
             className="fixed inset-0 z-50 flex items-center justify-center"
             aria-modal="true"
             role="dialog"
         >
-            {/* Backdrop */}
             <div
                 className="absolute inset-0 bg-black/50"
                 onClick={() => onOpenChange(false)}
             />
 
-            {/* Modal panel */}
             <div className="relative z-10 w-full max-w-md mx-4 rounded-lg bg-white shadow-lg p-6">
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-lg font-semibold">Login</h2>

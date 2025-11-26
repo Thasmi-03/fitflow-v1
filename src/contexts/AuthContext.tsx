@@ -27,8 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response = await authApi.login({ email, password });
       console.log('Logged in successfully:', response);
 
-      // TODO: Store token and user data
-      // For now, just redirect based on role
+      
       if (response.user) {
         const dashboardMap: Record<Role, string> = {
           admin: '/admin',
@@ -41,7 +40,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error('Login error:', err);
       console.error('Login error response:', err?.response?.data);
 
-      // Handle specific error cases
       if (err?.response?.status === 403) {
         throw new Error('Your account is pending admin approval. Please wait for approval before logging in.');
       }
@@ -70,8 +68,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
       console.log('Registered successfully:', response);
 
-      // Redirect to pending page or login based on response
-      if (isPartner) {
+      
+      if (isPartner || role === 'partner') {
         router.push('/auth/pending');
       } else {
         router.push('/auth/login');

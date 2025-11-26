@@ -1,7 +1,5 @@
-// User roles in the system
 export type Role = 'admin' | 'styler' | 'partner';
 
-// User object structure
 export interface User {
     id: string;
     email: string;
@@ -11,28 +9,24 @@ export interface User {
     updatedAt?: string;
 }
 
-// Authentication response from login/register
 export interface AuthResponse {
     message: string;
     token?: string;
     user: User;
 }
 
-// Registration request payload
 export interface RegisterRequest {
     email: string;
     password: string;
     role: Role;
-    shopName?: string; // Optional, for partner registrations
+    shopName?: string; 
 }
 
-// Login request payload
 export interface LoginRequest {
     email: string;
     password: string;
 }
 
-// Auth context type
 export interface AuthContextType {
     user: User | null;
     token: string | null;
@@ -44,7 +38,6 @@ export interface AuthContextType {
     clearError: () => void;
 }
 
-// Pending user (for admin approval)
 export interface PendingUser {
     id: string;
     email: string;

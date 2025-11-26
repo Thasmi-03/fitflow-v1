@@ -3,7 +3,6 @@ import { getToken, removeToken, removeUser } from '@/utils/storage';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://fitflow-api-three.vercel.app';
 
-// Create axios instance
 const apiClient: AxiosInstance = axios.create({
     baseURL: API_URL,
     headers: {
@@ -11,7 +10,6 @@ const apiClient: AxiosInstance = axios.create({
     },
 });
 
-// Request interceptor to add auth token
 apiClient.interceptors.request.use(
     (config) => {
         const token = getToken();
@@ -25,15 +23,12 @@ apiClient.interceptors.request.use(
     }
 );
 
-// Response interceptor for error handling
 apiClient.interceptors.response.use(
     (response) => response,
     (error: AxiosError) => {
-        // Handle 401 Unauthorized - token expired or invalid
         if (error.response?.status === 401) {
             removeToken();
             removeUser();
-            // Redirect to login if not already there
             if (typeof window !== 'undefined' && !window.location.pathname.includes('/auth/login')) {
                 window.location.href = '/auth/login';
             }

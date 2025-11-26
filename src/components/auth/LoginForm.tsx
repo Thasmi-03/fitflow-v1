@@ -61,7 +61,11 @@ export function LoginForm({ onSuccess, onSwitchToSignup }: LoginFormProps) {
           />
         </div>
 
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+        {error && (
+          <div className="p-3 rounded-md bg-red-50 border border-red-200">
+            <p className="text-red-600 text-sm font-medium">{error}</p>
+          </div>
+        )}
 
         <Button type="submit" disabled={loading} className="w-full">
           {loading ? 'Logging in...' : 'Login'}

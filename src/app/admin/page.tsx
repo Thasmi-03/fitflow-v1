@@ -6,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
-import { getPendingUsers, approveUser } from '@/lib/api/auth';
+import { getPendingUsers, approveUser } from '@/lib/api/admin';
 import { PendingUser } from '@/types/auth';
 import { toast } from 'sonner';
 import { Users, CheckCircle } from 'lucide-react';
@@ -36,7 +36,7 @@ export default function AdminDashboard() {
         try {
             await approveUser(userId);
             toast.success('User approved successfully');
-            loadPendingUsers(); // Reload the list
+            loadPendingUsers();
         } catch (error) {
             console.error('Error approving user:', error);
             toast.error('Failed to approve user');

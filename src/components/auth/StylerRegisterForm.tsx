@@ -27,8 +27,6 @@ export function StylerRegisterForm({ onSuccess, onSwitchToLogin }: StylerRegiste
     setLoading(true);
     try {
       console.log('Styler registration data:', data);
-      // TODO: call your register API for stylers here.
-      // Example: await api.registerStyler(data)
       if (onSuccess) onSuccess();
     } catch (err) {
       console.error('Styler register error:', err);
