@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -20,18 +21,25 @@ interface StylerRegisterFormProps {
 }
 
 export function StylerRegisterForm({ onSuccess, onSwitchToLogin }: StylerRegisterFormProps) {
+  const { register: registerUser, loading } = useAuth();
   const { register, handleSubmit } = useForm<StylerRegisterFormValues>();
-  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const onSubmit = async (data: StylerRegisterFormValues) => {
-    setLoading(true);
+    setError('');
     try {
-      console.log('Styler registration data:', data);
-      if (onSuccess) onSuccess();
-    } catch (err) {
+      await registerUser(data.email, data.password, 'styler', {
+        fullName: data.fullName,
+        phone: data.phone,
+        address: data.address
+      });
+      // Delay closing modal to allow navigation to complete
+      setTimeout(() => {
+        if (onSuccess) onSuccess();
+      }, 100);
+    } catch (err: any) {
       console.error('Styler register error:', err);
-    } finally {
-      setLoading(false);
+      setError(err.message || 'Registration failed');
     }
   };
 
@@ -95,6 +103,12 @@ export function StylerRegisterForm({ onSuccess, onSwitchToLogin }: StylerRegiste
             className="mt-1"
           />
         </div>
+
+        {error && (
+          <div className="p-3 rounded-md bg-red-50 border border-red-200">
+            <p className="text-red-600 text-sm font-medium">{error}</p>
+          </div>
+        )}
 
         <Button type="submit" disabled={loading} className="w-full">
           {loading ? 'Signing up...' : 'Sign Up'}

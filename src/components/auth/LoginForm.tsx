@@ -26,7 +26,10 @@ export function LoginForm({ onSuccess, onSwitchToSignup }: LoginFormProps) {
     setError('');
     try {
       await login(data.email, data.password);
-      if (onSuccess) onSuccess();
+      // Navigation happens in AuthContext, then close modal if callback exists
+      if (onSuccess) {
+        onSuccess();
+      }
     } catch (err: any) {
       setError(err?.message || 'Login failed');
     }

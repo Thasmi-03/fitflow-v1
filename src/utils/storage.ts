@@ -4,6 +4,8 @@ const USER_KEY = 'fitflow_user';
 export const setToken = (token: string): void => {
     if (typeof window !== 'undefined') {
         localStorage.setItem(TOKEN_KEY, token);
+        // Set cookie for middleware
+        document.cookie = `${TOKEN_KEY}=${token}; path=/; max-age=86400; SameSite=Strict`;
     }
 };
 
@@ -17,6 +19,8 @@ export const getToken = (): string | null => {
 export const removeToken = (): void => {
     if (typeof window !== 'undefined') {
         localStorage.removeItem(TOKEN_KEY);
+        // Remove cookie
+        document.cookie = `${TOKEN_KEY}=; path=/; max-age=0; SameSite=Strict`;
     }
 };
 

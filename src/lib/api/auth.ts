@@ -1,5 +1,5 @@
 import apiClient from './client';
-import { AuthResponse, LoginRequest, RegisterRequest, User, PendingUser } from '@/types/auth';
+import { AuthResponse, LoginRequest, RegisterRequest, User } from '@/types/auth';
 
 /**
  * Register a new user
@@ -32,18 +32,4 @@ export const getProfile = async (): Promise<{ user: User }> => {
     return response.data;
 };
 
-/**
- * Get pending users (admin only)
- */
-export const getPendingUsers = async (): Promise<{ count: number; users: PendingUser[] }> => {
-    const response = await apiClient.get<{ count: number; users: PendingUser[] }>('/api/auth/pending');
-    return response.data;
-};
 
-/**
- * Approve a user (admin only)
- */
-export const approveUser = async (userId: string): Promise<{ message: string; user: User }> => {
-    const response = await apiClient.put<{ message: string; user: User }>(`/api/auth/approve/${userId}`);
-    return response.data;
-};

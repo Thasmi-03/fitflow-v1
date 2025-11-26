@@ -4,6 +4,9 @@ export interface User {
     id: string;
     email: string;
     role: Role;
+    fullName?: string;
+    phone?: string;
+    address?: string;
     isApproved: boolean;
     createdAt?: string;
     updatedAt?: string;
@@ -19,7 +22,10 @@ export interface RegisterRequest {
     email: string;
     password: string;
     role: Role;
-    shopName?: string; 
+    fullName?: string;
+    phone?: string;
+    address?: string;
+    shopName?: string;
 }
 
 export interface LoginRequest {
