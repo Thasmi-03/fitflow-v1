@@ -1,15 +1,24 @@
+// src/components/ui/AuthModal.tsx
 'use client';
+
 import { useEffect, useState } from 'react';
 import { LoginForm } from '@/components/auth/LoginForm';
-import { RegisterForm } from '@/components/auth/RegisterForm';
+import { RegisterForm } from '@/components/auth/RegisterForm'; // partner form (if needed)
+import { StylerRegisterForm } from '@/components/auth/StylerRegisterForm';
 
 interface AuthModalProps {
   open: boolean;
   initialTab?: 'login' | 'signup';
   onClose: () => void;
+  isPartnerPage?: boolean; // if true show partner register, else show styler register
 }
 
-export default function AuthModal({ open, initialTab = 'login', onClose }: AuthModalProps) {
+export default function AuthModal({
+  open,
+  initialTab = 'login',
+  onClose,
+  isPartnerPage = false,
+}: AuthModalProps) {
   const [tab, setTab] = useState<'login' | 'signup'>(initialTab);
 
   useEffect(() => {
@@ -21,6 +30,7 @@ export default function AuthModal({ open, initialTab = 'login', onClose }: AuthM
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="fixed inset-0 bg-black/50" onClick={onClose} />
+
       <div className="bg-white p-6 rounded shadow-lg z-60 w-full max-w-md relative">
         {/* Tabs */}
         <div className="flex gap-2 mb-4">
@@ -39,10 +49,18 @@ export default function AuthModal({ open, initialTab = 'login', onClose }: AuthM
         </div>
 
         {/* Forms */}
-        {tab === 'login' ? <LoginForm onSuccess={onClose} /> : <RegisterForm onSuccess={onClose} />}
+        {tab === 'login' ? (
+          <LoginForm onSuccess={onClose} />
+        ) : isPartnerPage ? (
+          <RegisterForm onSuccess={onClose} isPartnerPage />
+        ) : (
+          <StylerRegisterForm onSuccess={onClose} />
+        )}
 
         <div className="mt-4 text-right">
-          <button onClick={onClose} className="text-sm underline">Close</button>
+          <button onClick={onClose} className="text-sm underline">
+            Close
+          </button>
         </div>
       </div>
     </div>

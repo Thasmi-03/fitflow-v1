@@ -1,7 +1,7 @@
 'use client'
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { Navbar } from '@/components/layout/Navbar';
+import { Navbar } from '@/components/Navbar';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Palette, Calendar, TrendingUp } from 'lucide-react';
