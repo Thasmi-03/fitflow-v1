@@ -3,14 +3,23 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
-import { Button } from './ui/button';
-import { SignupDialog } from './ui/SignupDialog';
-import { LoginDialog } from './ui/LoginDialog';
+import { Button } from '@/components/ui/button';
+import AuthModal from '@/components/ui/AuthModal';
 
-export function Navbar() {   //  Named export
-  const [open, setOpen] = useState(false);
-  const [isSignupOpen, setIsSignupOpen] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
+export function Navbar() {
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [authTab, setAuthTab] = useState<'login' | 'signup'>('login');
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const openLogin = () => {
+    setAuthTab('login');
+    setIsAuthOpen(true);
+  };
+
+  const openSignup = () => {
+    setAuthTab('signup');
+    setIsAuthOpen(true);
+  };
 
   return (
     <nav className="w-full bg-white border-b shadow-sm fixed top-0 left-0 z-50">
@@ -19,41 +28,37 @@ export function Navbar() {   //  Named export
 
         {/* Desktop Menu */}
         <div className="hidden md:flex space-x-4 items-center">
-          <Button variant="outline" asChild>
-            <Link href="/partner-register">Become a Partner</Link>
-          </Button>
-
-          <Button variant="outline" onClick={() => setIsLoginOpen(true)}>Login</Button>
-
-          <Button variant="outline" onClick={() => setIsSignupOpen(true)}>Signup</Button>
+            <Link href="/auth/register">
+            <Button variant="outline">Become a Partner</Button>
+          </Link>
+          <Button variant="outline" onClick={openSignup}>Signup</Button>
+          <Button variant="outline" onClick={openLogin}>Sigin</Button>
+        
         </div>
 
         {/* Mobile Hamburger */}
-        <button
+        {/* <button
           className="md:hidden"
-          onClick={() => setOpen(!open)}
+          onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle Menu"
         >
-          {open ? <X size={28} /> : <Menu size={28} />}
-        </button>
+          {mobileOpen ? <X size={28} /> : <Menu size={28} />}
+        </button> */}
       </div>
 
       {/* Mobile Menu */}
-      {open && (
+      {/* {mobileOpen && (
         <div className="md:hidden bg-white border-t p-4 space-y-3">
-          <Button className="w-full" variant="outline" asChild>
-            <Link href="/partner-register">Become a Partner</Link>
-          </Button>
-          <Button className="w-full" variant="outline" onClick={() => setIsLoginOpen(true)}>Login</Button>
-          <Button className="w-full" variant="outline" onClick={() => setIsSignupOpen(true)}>Signup</Button>
+          <Button className="w-full" variant="outline" onClick={openLogin}>Login</Button>
+          <Button className="w-full" variant="outline" onClick={openSignup}>Signup</Button>
+          <Link href="/auth/register">
+            <Button className="w-full" variant="outline">Become a Partner</Button>
+          </Link>
         </div>
-      )}
+      )} */}
 
-      {/* Signup Modal */}
-      <SignupDialog open={isSignupOpen} onOpenChange={setIsSignupOpen} />
-
-      {/* Login Modal */}
-      <LoginDialog open={isLoginOpen} onOpenChange={setIsLoginOpen} />
+      {/* Auth Modal */}
+      <AuthModal open={isAuthOpen} initialTab={authTab} onClose={() => setIsAuthOpen(false)} />
     </nav>
   );
 }
