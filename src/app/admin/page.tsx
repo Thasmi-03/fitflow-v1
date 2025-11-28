@@ -1,8 +1,7 @@
 'use client'
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { Navbar } from '@/components/layout/Navbar';
-import { useAuth } from '@/contexts/AuthContext';
+import { AdminHeader } from '@/components/layout/AdminHeader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
@@ -46,7 +45,7 @@ export default function AdminDashboard() {
     return (
         <ProtectedRoute allowedRoles={['admin']}>
             <div className="min-h-screen bg-gray-50">
-                <Navbar />
+                <AdminHeader />
 
                 <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                     <div className="mb-8">

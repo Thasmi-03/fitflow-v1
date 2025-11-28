@@ -16,13 +16,11 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
 
     useEffect(() => {
         if (!loading) {
-            // Not authenticated - redirect to login
             if (!user) {
                 router.push('/auth/login');
                 return;
             }
 
-            // Authenticated but wrong role - redirect to appropriate dashboard
             if (allowedRoles && !allowedRoles.includes(user.role)) {
                 const dashboardMap: Record<Role, string> = {
                     admin: '/admin',
@@ -34,7 +32,6 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
         }
     }, [user, loading, router, allowedRoles]);
 
-    // Show loading state
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -46,12 +43,10 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
         );
     }
 
-    // Not authenticated
     if (!user) {
         return null;
     }
 
-    // Wrong role
     if (allowedRoles && !allowedRoles.includes(user.role)) {
         return null;
     }

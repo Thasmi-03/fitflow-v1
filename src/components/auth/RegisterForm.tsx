@@ -11,8 +11,10 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 
 const registerSchema = z.object({
-  shopName: z.string().min(1, 'Shop name is required'),
+  fullName: z.string().min(1, 'Full name is required'),
   email: z.string().email('Invalid email'),
+  phone: z.string().min(1, 'Phone number is required'),
+  address: z.string().min(1, 'Address is required'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
   role: z.enum(['admin', 'styler', 'partner']),
 });
@@ -22,9 +24,10 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 interface RegisterFormProps {
   isPartnerPage?: boolean;
   onSuccess?: () => void;
+  onSwitchToLogin?: () => void;
 }
 
-export function RegisterForm({ isPartnerPage = false, onSuccess }: RegisterFormProps = {}) {
+export function RegisterForm({ isPartnerPage = false, onSuccess, onSwitchToLogin }: RegisterFormProps = {}) {
   const { register: registerUser, loading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -36,7 +39,7 @@ export function RegisterForm({ isPartnerPage = false, onSuccess }: RegisterFormP
     formState: { errors },
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { shopName: '', email: '', password: '' },
+    defaultValues: { fullName: '', email: '', phone: '', address: '', password: '' },
   });
 
   useEffect(() => {
@@ -46,7 +49,11 @@ export function RegisterForm({ isPartnerPage = false, onSuccess }: RegisterFormP
   const onSubmit = async (data: RegisterFormValues) => {
     setError('');
     try {
-      await registerUser(data.email, data.password, data.role as Role, { shopName: data.shopName }, isPartnerPage);
+      await registerUser(data.email, data.password, data.role as Role, {
+        fullName: data.fullName,
+        phone: data.phone,
+        address: data.address
+      }, isPartnerPage);
       if (onSuccess) onSuccess();
     } catch (err: any) {
       console.error('Registration error:', err);
@@ -55,36 +62,96 @@ export function RegisterForm({ isPartnerPage = false, onSuccess }: RegisterFormP
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div>
-        <Label htmlFor="shopName">Shop Name</Label>
-        <Input {...register('shopName')} id="shopName" disabled={loading} />
-        {errors.shopName && <p className="text-red-500 text-sm">{errors.shopName.message}</p>}
-      </div>
+    <div>
+      <h2 className="text-2xl font-bold mb-2">Create Account</h2>
+      <p className="text-gray-600 text-sm mb-6">Sign up as a partner</p>
 
-      <div>
-        <Label htmlFor="email">Email</Label>
-        <Input {...register('email')} id="email" type="email" disabled={loading} />
-        {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
-      </div>
-
-      <div>
-        <Label htmlFor="password">Password</Label>
-        <Input {...register('password')} id="password" type={showPassword ? 'text' : 'password'} disabled={loading} />
-        {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
-      </div>
-
-      {error && (
-        <div className="p-3 rounded-md bg-red-50 border border-red-200">
-          <p className="text-red-600 text-sm">{error}</p>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div>
+          <Label htmlFor="fullName">Full Name</Label>
+          <Input
+            {...register('fullName')}
+            id="fullName"
+            disabled={loading}
+            className="mt-1"
+          />
+          {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName.message}</p>}
         </div>
+
+        <div>
+          <Label htmlFor="email">Email</Label>
+          <Input
+            {...register('email')}
+            id="email"
+            type="email"
+            placeholder="you@example.com"
+            disabled={loading}
+            className="mt-1"
+          />
+          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+        </div>
+
+        <div>
+          <Label htmlFor="phone">Phone</Label>
+          <Input
+            {...register('phone')}
+            id="phone"
+            placeholder="+1234567890"
+            disabled={loading}
+            className="mt-1"
+          />
+          {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
+        </div>
+
+        <div>
+          <Label htmlFor="address">Address</Label>
+          <Input
+            {...register('address')}
+            id="address"
+            placeholder="123 Main St, City, Country"
+            disabled={loading}
+            className="mt-1"
+          />
+          {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>}
+        </div>
+
+        <div>
+          <Label htmlFor="password">Password</Label>
+          <Input
+            {...register('password')}
+            id="password"
+            type={showPassword ? 'text' : 'password'}
+            disabled={loading}
+            className="mt-1"
+          />
+          {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
+        </div>
+
+        {error && (
+          <div className="p-3 rounded-md bg-red-50 border border-red-200">
+            <p className="text-red-600 text-sm font-medium">{error}</p>
+          </div>
+        )}
+
+        <input {...register('role')} type="hidden" value="partner" />
+
+        <Button type="submit" disabled={loading} className="w-full">
+          {loading ? 'Signing up...' : 'Sign Up'}
+        </Button>
+      </form>
+
+      {onSwitchToLogin && (
+        <p className="text-center text-sm text-gray-600 mt-4">
+          Already have an account?{' '}
+          <button
+            type="button"
+            onClick={onSwitchToLogin}
+            className="text-blue-600 hover:underline font-medium"
+          >
+            Login
+          </button>
+        </p>
       )}
-
-      <input {...register('role')} type="hidden" value="partner" />
-
-      <Button type="submit" disabled={loading} className="w-full">
-        {loading ? 'Registering...' : 'Register as Partner'}
-      </Button>
-    </form>
+    </div>
   );
 }

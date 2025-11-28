@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Role, User } from '@/types/auth';
 import * as authApi from '@/lib/api/auth';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { setToken, getToken, removeToken, setUser as saveUser, getUser as getSavedUser, clearAuthData } from '@/utils/storage';
 
 interface AuthContextType {
@@ -26,9 +26,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const pathname = usePathname();
 
-  // Check authentication status on mount
   useEffect(() => {
     checkAuth();
   }, []);
@@ -41,7 +39,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      // Fetch user profile
       const { user } = await authApi.getProfile();
       setUser(user);
       saveUser(user);
@@ -60,17 +57,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response = await authApi.login({ email, password });
       console.log('Logged in successfully:', response);
 
-      // Save token
       if (response.token) {
         setToken(response.token);
       }
 
-      // Save user
       if (response.user) {
         setUser(response.user);
         saveUser(response.user);
 
-        // Redirect to appropriate dashboard using window.location for guaranteed navigation
         const dashboardMap: Record<Role, string> = {
           admin: '/admin',
           styler: '/styler',
@@ -79,8 +73,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         const dashboardPath = dashboardMap[response.user.role];
         console.log('Redirecting to:', dashboardPath);
-
-        // Use window.location.href for hard redirect
         window.location.href = dashboardPath;
       }
     } catch (err: any) {
@@ -97,7 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const registerUser = async (
+  const register = async (
     email: string,
     password: string,
     role: Role,
@@ -114,11 +106,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
       console.log('Registered successfully:', response);
 
-      // For partners, redirect to pending page
       if (isPartner || role === 'partner') {
         router.push('/auth/pending');
       } else {
-        // For stylers, they can login immediately (auto-approved)
         router.push('/auth/login');
       }
     } catch (err: any) {
@@ -133,11 +123,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     clearAuthData();
     setUser(null);
-    router.push('/');
+    window.location.href = '/';
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register: registerUser, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

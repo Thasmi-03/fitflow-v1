@@ -33,7 +33,7 @@ export function StylerRegisterForm({ onSuccess, onSwitchToLogin }: StylerRegiste
         phone: data.phone,
         address: data.address
       });
-      // Delay closing modal to allow navigation to complete
+
       setTimeout(() => {
         if (onSuccess) onSuccess();
       }, 100);
